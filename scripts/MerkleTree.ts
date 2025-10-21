@@ -17,7 +17,7 @@ const tree = StandardMerkleTree.of(whitelistedAddresses, ["address"]);
 
 // Get the root tree value
 const root = tree.root;
-console.log("Root value:", root);
+// console.log("Root value:", root);
 
 // Gen proof for each address
 // for(const [i, v] of tree.entries()) {
@@ -26,20 +26,20 @@ console.log("Root value:", root);
 // };
 
 // Verify
-const testAddress = "0x450393dDB269b71504112c99F77860d39dc69803";
-try {
-  // Tìm vị trí trong danh sách whitelist
-  const index = whitelistedAddresses.findIndex(
-    (a) => a[0].toLowerCase() === testAddress.toLowerCase()
-  );
+// const testAddress = "0x450393dDB269b71504112c99F77860d39dc69803";
+// try {
+// Tìm vị trí trong danh sách whitelist
+//   const index = whitelistedAddresses.findIndex(
+//     (a) => a[0].toLowerCase() === testAddress.toLowerCase()
+//   );
 
-  if (index === -1) {
-    console.log(`❌ Địa chỉ ${testAddress} không có trong whitelist.`);
-  } else {
-    const proof = tree.getProof(index+1);
-    const isValid = StandardMerkleTree.verify(root, ["address"], [testAddress], proof);
-    console.log(isValid ? "✅ Proof hợp lệ!" : "❌ Proof sai!");
-  }
-} catch (err) {
-  console.error("⚠️ Lỗi khi tạo proof:", (err as Error).message);
-}
+//   if (index === -1) {
+//     console.log(`❌ Địa chỉ ${testAddress} không có trong whitelist.`);
+//   } else {
+//     const proof = tree.getProof(index+1);
+//     const isValid = StandardMerkleTree.verify(root, ["address"], [testAddress], proof);
+//     console.log(isValid ? "✅ Proof hợp lệ!" : "❌ Proof sai!");
+//   }
+// } catch (err) {
+//   console.error("⚠️ Lỗi khi tạo proof:", (err as Error).message);
+// }
