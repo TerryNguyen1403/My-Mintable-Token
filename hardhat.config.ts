@@ -24,7 +24,9 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 
 const {
   TESTNET_PRIVATE_KEY: testnetPrivateKey,
-  MAINNET_PRIVATE_KEY: mainnetPrivateKey,
+  // MAINNET_PRIVATE_KEY: mainnetPrivateKey,
+  SEPOLIA_RPC_URL: sepoliaRPC,
+  // ETHEREUM_RPC_URL: ethereumRPC
 } = process.env;
 const reportGas = process.env.REPORT_GAS;
 
@@ -37,17 +39,17 @@ const reportGas = process.env.REPORT_GAS;
 module.exports = {
   networks: {
     "sepolia": {
-      url: "https://eth-sepolia.public.blastapi.io",
+      url: sepoliaRPC,
       chainId: 11155111,
       accounts: [testnetPrivateKey],
       timeout: 40000,
     },
-    "ethereum": {
-      url: "https://eth-mainnet.public.blastapi.io",
-      chainId: 1,
-      accounts: [mainnetPrivateKey],
-      timeout: 60000,
-    }
+    // "ethereum": {
+    //   url: "https://eth-mainnet.public.blastapi.io",
+    //   chainId: 1,
+    //   accounts: [mainnetPrivateKey],
+    //   timeout: 60000,
+    // }
   },
   solidity: {
     compilers: [
@@ -80,9 +82,7 @@ module.exports = {
     runOnCompile: true,
   },
   etherscan: {
-    apiKey: {
-      "mainnet": "",
-    }
+    apiKey: "261EBWY19KFDUDJBH6D6C2G3I5JFINBA2U"
   },
   sourcify: {
     // Disabled by default
