@@ -13,17 +13,17 @@ const whitelistedAddresses: string[][] = [
     ["0x450393dDB269b71504112c99F77860d39dc69803"]
 ];
 
-const tree = StandardMerkleTree.of(whitelistedAddresses, ["address"]);
+const tree = StandardMerkleTree.of<string[]>(whitelistedAddresses, ["address"]);
 
 // Get the root tree value
-const root = tree.root;
-// console.log("Root value:", root);
+const root: string = tree.root;
+console.log("Root value:", root);
 
 // Gen proof for each address
-// for(const [i, v] of tree.entries()) {
-//     console.log(`Address[${i}]: `, v[0]);
-//     console.log(`Proof of Address[${i}]: `, tree.getProof(i));
-// };
+for(const [i, v] of tree.entries()) {
+    console.log(`Address[${i}]: `, v[0]);
+    console.log(`Proof of Address[${i}]: `, tree.getProof(i));
+};
 
 // Verify
 // const testAddress = "0x450393dDB269b71504112c99F77860d39dc69803";
