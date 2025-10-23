@@ -9,6 +9,7 @@ import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 import "@nomicfoundation/hardhat-ethers";
 import "@typechain/hardhat";
+import "@nomicfoundation/hardhat-toolbox";
 
 dotenv.config();
 
