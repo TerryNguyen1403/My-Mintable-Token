@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
 
-// import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
@@ -21,22 +20,17 @@ contract Airdrop is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     }
 
     // ===== EVENTS =====
-    event MerkleRootUpdated(bytes32 oldRoot, bytes32 newRoot);
+
+    event MerkleRootUpdated(bytes32 indexed oldRoot, bytes32 indexed newRoot);
     event Claimed(address indexed account, uint256 amount);
 
     // ===== MODIFIERS =====
-    modifier isWhitelistedAddress(bytes32[] calldata _proof) {
-        require(
-            verifyProof(_proof, keccak256(abi.encodePacked(msg.sender))),
-            "Not Whitelisted Address"
-        );
-        _;
-    }
 
-    modifier isClaimed(address _account ) {
+    modifier isWhitelistedAddress(uint256 _amount, bytes32[] calldata _proof) {
+        bytes32 leaf = keccak256(abi.encodePacked(msg.sender, _amount));
         require(
-            !hasClaimed[_account],
-            "Already Claimed !!!"
+            verifyProof(_proof, leaf),
+            "Invalid proof or amount"
         );
         _;
     }
@@ -68,9 +62,9 @@ contract Airdrop is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     function claim(
         uint256 _amount,
         bytes32[] calldata _proof
-    ) external isWhitelistedAddress(_proof) isClaimed(msg.sender) {
+    ) external isWhitelistedAddress(_proof) {
         require(_amount > 0, "Invalid Amount");
-        require(_proof.length > 0, "Invalid Proof");
+        require(!hasClaimed[msg.sender], "Already claimed");
 
         hasClaimed[msg.sender] = true;
 
