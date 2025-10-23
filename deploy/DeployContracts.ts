@@ -1,5 +1,7 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/dist/types";
+import path from "path";
+import fs from "fs";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { deployments, getNamedAccounts } = hre;
@@ -29,15 +31,29 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     // ==== 2. Deploy Airdrop ====
     
     //Get Merkle root
-    const merkleRoot = "0x79ba8e7b1051944565b6953aeb2351d0d6ef5ef3b62f51f1d210de97776782cf";
+    const rootPath = path.join(__dirname, "../merkle/Root.json");
+    const rootData = fs.readFileSync(rootPath, "utf8");
+    const rootHash = JSON.parse(rootData).rootHash;
+
     console.log("Deploying Airdrop...\n");
     const airdropDeployment = await deploy("Airdrop", {
+        proxy: {
+            proxyContract: "UUPS",
+            execute: {
+                init: {
+                    methodName: "initialize",
+                    args: [ // Constructor agrs
+                        tokenAddress,
+                        rootHash
+                    ]
+                },
+            },
+        },
         contract: "Airdrop",
-        args: [ tokenAddress, merkleRoot ],
         from: deployer,
         log: true,
         autoMine: true,
-        skipIfAlreadyDeployed: false,
+        skipIfAlreadyDeployed: true,
     })
 
     //Get Airdrop address
