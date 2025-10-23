@@ -39,11 +39,11 @@ describe("Airdrop", function() {
     it("should allow a whitelisted address to claim tokens", async function () {
         const amount = 100;
         
-        // Tạo leaf từ địa chỉ người dùng
+        // Create a leaf from user's address
         const leaf = keccak256(addr1.address);
         const proof = this.tree.getHexProof(leaf);
 
-        // Gọi claim (với proof đúng)
+        // Call claim()
         const tx = await airdrop.connect(addr1).claim(amount, proof);
 
         // Expect event Claimed
@@ -51,7 +51,7 @@ describe("Airdrop", function() {
             .to.emit(airdrop, "Claimed")
             .withArgs(addr1.address, amount);
 
-        // Kiểm tra balance
+        // Balance check
         const balance = await token.balanceOf(addr1.address);
         expect(balance).to.equal(amount);
     });
