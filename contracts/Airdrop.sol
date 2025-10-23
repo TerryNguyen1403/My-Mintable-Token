@@ -1,17 +1,24 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+// import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "./MyMintableToken.sol";
 
-contract Airdrop is Ownable {
+contract Airdrop is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     // ===== STATE VARIABLES =====
 
     MyMintableToken public token;
     bytes32 public merkleRoot;
 
     mapping(address => bool) public hasClaimed;
+
+    constructor() {
+        _disableInitializers();
+    }
 
     // ===== EVENTS =====
     event MerkleRootUpdated(bytes32 oldRoot, bytes32 newRoot);
@@ -34,11 +41,13 @@ contract Airdrop is Ownable {
         _;
     }
 
-    // ===== CONSTRUCTOR =====
+    // ===== INITIALIZER =====
 
-    constructor(address _tokenAddress, bytes32 _root) Ownable(msg.sender){
+    function initialize(address _tokenAddress, bytes32 _merkleRoot) public initializer {
+        __Ownable_init(msg.sender);
+        __UUPSUpgradeable_init();
         token = MyMintableToken(_tokenAddress);
-        merkleRoot = _root;
+        merkleRoot = _merkleRoot;
     }
 
     // ===== VERIFICATION FUNCTIONS =====
@@ -71,4 +80,9 @@ contract Airdrop is Ownable {
         // Emitting Claimed
         emit Claimed(msg.sender, _amount);
     }
+
+    function _authorizeUpgrade(address) internal override onlyOwner {}
+
+    // Create 50 empty storage slots for future upgrade
+    uint256[50] private __gap;
 }
