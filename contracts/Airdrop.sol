@@ -62,7 +62,7 @@ contract Airdrop is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     function claim(
         uint256 _amount,
         bytes32[] calldata _proof
-    ) external isWhitelistedAddress(_proof) {
+    ) external isWhitelistedAddress(_amount, _proof) {
         require(_amount > 0, "Invalid Amount");
         require(!hasClaimed[msg.sender], "Already claimed");
 
