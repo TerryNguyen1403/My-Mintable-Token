@@ -1,4 +1,4 @@
-# 🌿 My Mintable Token — Capstone Project
+# 🌿 Airdrop Token Contract — Capstone Project
 
 This project demonstrates how to implement an **ERC-20 token** with **Merkle Tree-based whitelisting** using **Solidity** and **Hardhat**.  
 It aims to showcase smart contract development, secure access control, and efficient verification using cryptographic proofs.
@@ -53,3 +53,43 @@ This approach allows on-chain verification without storing every address, reduci
 4. **Deploy** → `deploy/MyMintableToken.ts` deploys the contract
 5. **Test** → `test/` ensures functionality and security
 6. **Deployment info** → stored in `deployments/`
+
+---
+
+## ⚙️ Setup & Environment
+
+Create `.env` file:
+```bash
+PRIVATE_KEY=<YOUR_WALLET_PRIVATE_KEY>
+SEPOLIA_RPC=<YOUR_RPC_URL>
+ETHERSCAN_API_KEY=<YOUR_ETHERSCAN_API_KEY>
+REPORT_GAS=true
+```
+
+---
+
+# Install dependencies
+```bash
+npm install
+```
+
+# Compile contracts
+```bash
+npx hardhat compile
+```
+
+# Create merkle root + proof 
+```bash
+npx hardhat run scripts/GenerateMerkleTree.ts
+```
+After created, rootHash will be stored in merkle/Root.json
+
+# Deploy
+```bash
+npx hardhat deploy --network sepolia --tags Airdrop
+```
+
+# Verify Airdrop Contract
+```bash
+npx hardhat verify --network sepolia <DEPLOY_ADDRESS> <TOKEN_ADDRESS> <HASH_ROOT>
+```
